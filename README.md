@@ -1,2 +1,6 @@
 # -BioBuilder-
-Una aplicación hecha exclusivamente para átomos y moleculas, construye cualquier celula, anticuerpos, sistemas de defensa, programa tus células con ADN y mucho más
+
+BioBuilder es una aplicación de código abierto desarrollada en Java para crear, editar y visualizar átomos, moléculas, proteínas y otras estructuras biológicas. El objetivo es ofrecer herramientas para explorar, diseñar y analizar modelos moleculares y biomoleculares de forma intuitiva y escalable, próximas funciones!!
+
+## Roadmap
+- V0.1.0 - Editor básico no lo juzgues
