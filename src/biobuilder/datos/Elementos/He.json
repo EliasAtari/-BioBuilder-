@@ -1,8 +1,8 @@
 {
-  "id": "H",
-  "simbolo": "H",
-  "nombre": "Hidrogeno",
-  "numeroAtomico": 1,
-  "masaAtomica": 1.0,
-  "enlacesMaximos": 1
+  "id": "He",
+  "simbolo": "He",
+  "nombre": "Helio",
+  "numeroAtomico": 21,
+  "masaAtomica": 4.0,
+  "enlacesMaximos": 0
 }
