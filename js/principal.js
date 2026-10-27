@@ -28,7 +28,7 @@ function actualizarInformacion() {
             (cantidades[atomo.elemento] || 0) + 1;
     }
 
-    // Orden convencional: carbono, hidrógeno y los demás.
+    // Orden convencional: carbono, hidrógeno y los  demás.
     const orden = Object.keys(cantidades).sort((a, b) => {
         const prioridad = { C: 0, H: 1 };
         return (prioridad[a] ?? 2) - (prioridad[b] ?? 2)
