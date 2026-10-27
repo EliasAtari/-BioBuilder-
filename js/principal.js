@@ -123,7 +123,14 @@ Object.assign(esfera.style, {
     clipPath: "none",
     zIndex: "10"
 });
-
+    esfera.style.setProperty("width", "48px", "important");
+esfera.style.setProperty("height", "48px", "important");
+esfera.style.setProperty("min-width", "48px", "important");
+esfera.style.setProperty("min-height", "48px", "important");
+esfera.style.setProperty("border-radius", "50%", "important");
+esfera.style.setProperty("display", "flex", "important");
+esfera.style.setProperty("flex-shrink", "0", "important");
+esfera.style.setProperty("background-image", "none", "important");
     visor.appendChild(esfera);
 
     atomos.push({
