@@ -1,1 +1,299 @@
+:root {
+    --fondo: #07111f;
+    --panel: #0d1b2a;
+    --panel-claro: #122438;
+
+    --azul: #00c8ff;
+    --verde: #32e6a1;
+
+    --texto: #eaf5ff;
+    --texto-secundario: #91a9bd;
+    --borde: #233c54;
+}
+
+
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+
+    background: var(--fondo);
+    color: var(--texto);
+
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+}
+
+
+
+.barra-superior {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 12px 18px;
+    min-height: 64px;
+
+    background: var(--panel);
+    border-bottom: 1px solid var(--borde);
+}
+
+.marca h1 {
+    margin: 0;
+    color: var(--azul);
+    font-size: 22px;
+}
+
+.marca p {
+    margin: 4px 0 0;
+    color: var(--texto-secundario);
+    font-size: 12px;
+}
+
+
+
+.contenedor {
+    display: grid;
+
+    grid-template-columns: 220px minmax(0, 1fr);
+    gap: 14px;
+
+    padding: 14px;
+    min-height: calc(100vh - 64px);
+}
+
+
+
+.panel-herramientas {
+    padding: 14px;
+
+    background: var(--panel);
+    border: 1px solid var(--borde);
+    border-radius: 12px;
+}
+
+.panel-herramientas h2 {
+    margin-top: 0;
+    color: var(--verde);
+    font-size: 18px;
+}
+
+.grupo-herramientas {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    margin-bottom: 22px;
+}
+
+.grupo-herramientas h3 {
+    margin-bottom: 6px;
+
+    color: var(--texto-secundario);
+    font-size: 12px;
+    text-transform: uppercase;
+}
+
+
+
+button {
+    font-family: inherit;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.boton-herramienta {
+    width: 100%;
+    min-height: 42px;
+
+    padding: 10px;
+    text-align: left;
+
+    color: var(--texto);
+    background: var(--panel-claro);
+
+    border: 1px solid var(--borde);
+    border-radius: 8px;
+}
+
+.boton-herramienta:hover {
+    background: #18344a;
+    border-color: var(--azul);
+}
+
+.boton-herramienta.activo {
+    color: var(--azul);
+    background: #063247;
+    border-color: var(--azul);
+}
+
+.boton-principal {
+    padding: 10px 16px;
+
+    color: #04141c;
+    background: var(--azul);
+
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+.boton-principal:hover {
+    background: #63ddff;
+}
+
+
+
+.area-trabajo {
+    display: flex;
+    flex-direction: column;
+
+    min-width: 0;
+    min-height: 450px;
+    overflow: hidden;
+
+    background: var(--panel);
+    border: 1px solid var(--borde);
+    border-radius: 12px;
+}
+
+
+
+.barra-editor {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+
+    padding: 12px 14px;
+
+    background: var(--panel-claro);
+    border-bottom: 1px solid var(--borde);
+}
+
+.barra-editor h2 {
+    margin: 0;
+    font-size: 16px;
+}
+
+.estado-editor {
+    color: var(--texto-secundario);
+    font-size: 12px;
+}
+
+
+
+.visor-molecular {
+    position: relative;
+    flex: 1;
+
+    min-height: 350px;
+    overflow: hidden;
+
+    background-color: #081522;
+
+    background-image:
+        linear-gradient(#18314955 1px, transparent 1px),
+        linear-gradient(90deg, #18314955 1px, transparent 1px);
+
+    background-size: 24px 24px;
+}
+
+
+
+.mensaje-inicial {
+    position: absolute;
+    inset: 0;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+    padding: 24px;
+    text-align: center;
+    pointer-events: none;
+}
+
+.mensaje-inicial h3 {
+    margin: 0;
+    color: var(--azul);
+    font-size: 20px;
+}
+
+.mensaje-inicial p {
+    max-width: 320px;
+    margin: 0;
+
+    color: var(--texto-secundario);
+    line-height: 1.6;
+}
+
+
+.panel-informacion {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+
+    padding: 12px 14px;
+
+    background: var(--panel-claro);
+    border-top: 1px solid var(--borde);
+}
+
+.dato-molecular {
+    color: var(--texto-secundario);
+}
+
+.dato-molecular strong {
+    color: var(--verde);
+}
+
+
+/* ADAPTACIÓN A CELULARES */
+
+@media (max-width: 700px) {
+
+    .contenedor {
+        grid-template-columns: minmax(0, 1fr);
+        padding: 10px;
+        gap: 10px;
+    }
+
+    .panel-herramientas {
+        padding: 12px;
+    }
+
+    .grupo-herramientas {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .grupo-herramientas h3 {
+        width: 100%;
+    }
+
+    .boton-herramienta {
+        width: auto;
+        flex: 1 1 125px;
+    }
+
+    .area-trabajo {
+        min-height: 430px;
+    }
+
+    .visor-molecular {
+        min-height: 320px;
+    }
+
+    .panel-informacion {
+        gap: 10px;
+    }
+  }
 
