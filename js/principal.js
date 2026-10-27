@@ -97,23 +97,32 @@ function agregarAtomo() {
 
     esfera.textContent = simbolo;
     esfera.title = datos.nombre;
-
-    Object.assign(esfera.style, {
-        position: "absolute",
-        width: "48px",
-        height: "48px",
-        borderRadius: "50%",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        fontWeight: "bold",
-        fontSize: "16px",
-        color: datos.texto,
-        background: `radial-gradient(circle at 30% 25%, #ffffff99, ${datos.color} 48%, #00000055 100%)`,
-        border: "1px solid #ffffff55",
-        boxShadow: "inset -4px -5px 8px #00000035, 0 3px 8px #00000035",
-        userSelect: "none"
-    });
+    
+Object.assign(esfera.style, {
+    position: "absolute",
+    width: "48px",
+    height: "48px",
+    minWidth: "48px",
+    minHeight: "48px",
+    boxSizing: "border-box",
+    borderRadius: "50%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontWeight: "bold",
+    fontSize: "16px",
+    color: datos.texto,
+    background: `radial-gradient(circle at 30% 25%, #ffffff 0%, ${datos.color} 45%, #222831 100%)`,
+    border: "1px solid #ffffff66",
+    boxShadow: "inset -4px -5px 8px #00000055, 0 3px 8px #00000055",
+    padding: "0",
+    margin: "0",
+    flex: "none",
+    appearance: "none",
+    transform: "none",
+    clipPath: "none",
+    zIndex: "10"
+});
 
     visor.appendChild(esfera);
 
