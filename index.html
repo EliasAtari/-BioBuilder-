@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+
+    content="width=device-width,initial-scale=1.0">
+  <meta name="theme-color"content="#07111f">
+
+  <tittle>BBM WEB - BioBuilder</tittle>
+  <link rel="stylesheet" href="css/estilos.css">
+</head>
+
+
+<body>
+
+  <header class="barra-superior">
+    <div class="marca">
+      <div>
+        <h1>BBM WEB</h1>
+        <p>Constructor Macromolecular</p>
+        
+      </div>
+    </div>
+
+    <button class="boton-principal" id="guardar">
+      guardar
+    </button>
+      
+  </header>
+
+
+  <main class="contenedor">
+    <aside class="panel-herramientas">
+      <h2>Herramientas</h2>
+      <div class="grupo-herramientas">
+        <h3>Construccion</h3>
+      <button class="boton-herramienta"
+        id="agregar-atomo">
+        + añadir átomo
+        
+      </button>
+
+      <button class="boton-herramienta"
+        id="crear-enlace">
+      + crear enlace
+      </button>
+
+      <button class="boton-herramienta"
+        id="seleccionar">
+       Seleccionar 
+      </button>
+
+      <button class="boton-herramienta"
+        id="eliminar">
+      Eliminar
+      </button>
+      </div>
+
+      <div class="grupo-herramientas>
+        <h3>Espacios</h3>
+
+        <button class="boton-herramienta activo"
+                        id="modo-3d">
+                    Vista 3D
+                </button>
+
+                <button class="boton-herramienta"
+                        id="modo-2d">
+                    Vista 2D
+                </button>
+            </div>
+
+            <div class="grupo-herramientas">
+                <h3>Biblioteca</h3>
+
+                <button class="boton-herramienta"
+                        id="biblioteca">
+                    Biblioteca química
+                </button>
+
+                <button class="boton-herramienta"
+                        id="elementos">
+                    Elementos seleccionados
+                </button>
+
+                <button class="boton-herramienta"
+                        id="cuenta">
+                    Cuenta
+                </button>
+
+                <button class="boton-herramienta"
+                        id="ajustes">
+                    Ajustes
+                </button>
+            </div>
+
+        </aside>
+
+
+        <section class="area-trabajo">
+
+            <div class="barra-editor">
+
+                <h2>Molécula actual</h2>
+
+                <div class="estado-editor" id="estado">
+                    Preparado para construir
+                </div>
+
+            </div>
+
+
+            <!-- Espacio donde aparecerá la molécula -->
+            <div class="visor-molecular" id="visor">
+
+                <div class="mensaje-inicial" id="mensaje-inicial">
+
+                    <h3>Espacio molecular</h3>
+
+                    <p>
+                        Aquí podrás construir y visualizar
+                        tus moléculas.
+                    </p>
+
+                    <p>
+                        Selecciona una herramienta
+                        para comenzar.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="panel-informacion">
+
+                <div class="dato-molecular">
+                    Fórmula:
+                    <strong id="formula">—</strong>
+                </div>
+
+                <div class="dato-molecular">
+                    Átomos:
+                    <strong id="cantidad-atomos">0</strong>
+                </div>
+
+                <div class="dato-molecular">
+                    Enlaces:
+                    <strong id="cantidad-enlaces">0</strong>
+                </div>
+
+                <div class="dato-molecular">
+                    Temperatura:
+                    <strong id="temperatura">No asignada</strong>
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+  
+    <script src="js/principal.js"></script>
+
+</body>
+</html>
