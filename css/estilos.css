@@ -192,8 +192,8 @@ button {
     position: relative;
     flex: 1;
 
-    min-height: 350px;
-    overflow: hidden;
+    min-height: 400px;
+    overflow: auto;
 
     background-color: #081522;
 
