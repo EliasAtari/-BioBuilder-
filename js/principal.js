@@ -25,7 +25,7 @@ const enlaces = [];
 
 let siguienteId = 0;
 let elementoSeleccionado = "H";
-let modoEliminacion = "false";
+let modoEliminacion = false;
 let modoColocacion = false;
 let modoEnlace = false;
 let primerAtomo = null;
@@ -364,7 +364,9 @@ if (botonAgregar && visor && contadorAtomos && formula && estado) {
     }
 
     if (botonEliminar) {
-        botonEliminar.addEventListenner("click", iniciarEleminacion);
+        botonEliminar.addEventListenner("click",
+                                        iniciarEleminacion
+                                       );
     }
     
     visor.addEventListener("click", function(evento) {
