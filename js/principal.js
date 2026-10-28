@@ -178,7 +178,8 @@ function colocarAtomo(x, y) {
 }
 
 if (botonAgregar && visor && contadorAtomos && formula && estado) {
-    botonAgregar.addEventListener("click", agregarAtomo);
+    console.log("Javascript esta cargando");
+    botonAgregar.addEventListener("click", () => alert("el boton funciona!"));
 
     visor.addEventListener("click", function(evento) {
         if (!modoColocacion) return;
