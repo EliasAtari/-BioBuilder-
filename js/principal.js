@@ -2,10 +2,11 @@
 "use strict";
 
 const botonAgregar = document.getElementById("agregar-atomo");
+const botonEliminar = document.getElementById("eliminar"); 
+let modoEliminacion = false;
 const botonEnlace = document.getElementById("crear-enlace");
 const visor = document.getElementById("visor");
 const mensajeInicial = document.getElementById("mensaje-inicial");
-
 const contadorAtomos = document.getElementById("cantidad-atomos");
 const contadorEnlaces = document.getElementById("cantidad-enlaces");
 const formula = document.getElementById("formula");
@@ -127,7 +128,6 @@ function crearEsfera(simbolo, datos) {
     return svg;
 }
 
-// Capa donde dibujamos los enlaces, detrás de las esferas.
 const capaEnlaces = document.createElementNS(
     "http://www.w3.org/2000/svg",
     "svg"
@@ -241,6 +241,39 @@ function colocarAtomo(x, y) {
     estado.textContent = `Átomo añadido: ${datos.nombre}`;
 }
 
+function iniciarEliminacion() {
+    modoColocacion = false;
+    modoEnlace = false;
+    modoEliminacion = true;
+    primerAtomo = null;
+
+    estado.textContent = "Haz click cerca del átomo que quieres eliminar.";
+}
+
+function eliminarAtomo(atomo) {
+    for (let i = enlaces.length - 1; i >= 0; i--) {
+         if {
+             enlaces[i].a.id === atomo.id ||
+             enlaces[i].b.id === atomo.id
+        ) {
+            enlaces.splice(i, 1);
+        }
+    }
+
+    atomo.esfera.remove();
+
+    const indice = atomos.findIndex(a => a.id === atomo.id);
+
+    if (indice !== -1) {
+        atomos.splice(indice, 1);
+    }
+
+    actualizarDibujoEnlaces();
+    actualizarInformacion();
+
+    estado.textContent = "Átomo y sus enlaces eliminados.";
+    }
+
 function iniciarCreacionEnlace() {
     if (atomos.length < 2) {
         estado.textContent =
@@ -330,12 +363,39 @@ if (botonAgregar && visor && contadorAtomos && formula && estado) {
         );
     }
 
+    if (botonEliminar) {
+        botonEliminar.addEventListenner("click", iniciarEleminacion);
+    }
+    
     visor.addEventListener("click", function(evento) {
         const rect = visor.getBoundingClientRect();
-
         const x = evento.clientX - rect.left;
         const y = evento.clientY - rect.top;
+if (modoEliminacion) {
+    let cercano = null;
+    let distanciaMinima = Infinity;
 
+    for (const atomo of atomos) {
+        const distancia = Math.hypot(
+            atomo.x - x,
+            atomo.y - y
+        );
+
+        if (distancia < distanciaMinima) {
+            distanciaMinima = distancia;
+            cercano = atomo;
+        }
+    }
+
+    if (cercano && distanciaMinima <= 32) {
+        eliminarAtomo(cercano);
+        modoEliminacion = false;
+    } else {
+        estado.textContent = "Haz clic más cerca de una esfera.";
+    }
+
+    return;
+}
         if (modoColocacion) {
             colocarAtomo(x, y);
             modoColocacion = false;
