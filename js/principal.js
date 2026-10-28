@@ -365,7 +365,7 @@ if (botonAgregar && visor && contadorAtomos && formula && estado) {
 
     if (botonEliminar) {
         botonEliminar.addEventListenner("click",
-                                        iniciarEleminacion
+                                        iniciarEliminacion
                                        );
     }
     
