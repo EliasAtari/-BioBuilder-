@@ -122,10 +122,11 @@ function crearEsfera(simbolo, datos) {
 
     return svg;
 }
-
-function colocarAtomos() {
+let elementoSeleccionado = "H";
+let modoColocacion = false;
+function colocarAtomos(x, y) {
     const simbolo = elementoSeleccionado;
-    const datos = elemento[simbolo];
+    const datos = elementos[simbolo];
     const esfera = crearEsfera(simbolo, datos);
 
     esfera.style.left = `${x - 24}px`;
@@ -149,6 +150,36 @@ function colocarAtomos() {
     actualizarInformacion();
 
     estado.textContent = `Átomo añadido: ${datos.nombre}`;
+}
+
+function agregarAtomo() {
+    const opciones = Object.entries(elementos)
+        .map(([simbolo, datos]) =>
+            `${simbolo} = ${datos.nombre}`
+        )
+        .join("\n");
+
+    const respuesta = prompt(
+        "¿Qué átomo quieres colocar?\n\n" +
+        opciones +
+        "\n\nEscribe el símbolo:"
+    );
+
+    if (respuesta === null) return;
+
+    const simbolo = respuesta.trim().toUpperCase();
+
+    if (!elementos[simbolo]) {
+        estado.textContent = "Elemento no válido.";
+        return;
+    }
+
+    elementoSeleccionado = simbolo;
+    modoColocacion = true;
+
+    estado.textContent =
+        `Elemento seleccionado: ${elementos[simbolo].nombre}. ` +
+        "Haz clic en el espacio molecular.";
 }
 function agregarAtomo() {
     const opciones = Object.entries(elementos)
@@ -196,11 +227,23 @@ function agregarAtomo() {
 
 if (botonAgregar && visor && contadorAtomos && formula && estado) {
     botonAgregar.addEventListener("click", agregarAtomo);
-    window.addEventListener("resize", dibujarAtomos);
+
+    visor.addEventListener("click", function(evento) {
+        if (!modoColocacion) return;
+
+        const rectangulo = visor.getBoundingClientRect();
+        const x = evento.clientX - rectangulo.left;
+        const y = evento.clientY - rectangulo.top;
+
+        colocarAtomo(x, y);
+        modoColocacion = false;
+    });
+
     actualizarInformacion();
 } else {
     console.error(
         "BBM WEB: falta un elemento HTML necesario. Revisa los IDs."
     );
-          }
+}
+
       
