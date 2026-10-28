@@ -123,26 +123,33 @@ function crearEsfera(simbolo, datos) {
     return svg;
 }
 
-function dibujarAtomos() {
-    const ancho = visor.clientWidth;
-    const separacion = 68;
-    const columnas = Math.max(
-        1,
-        Math.floor((ancho - 12) / separacion)
-    );
+function colocarAtomos() {
+    const simbolo = elementoSeleccionado;
+    const datos = elemento[simbolo];
+    const esfera = crearEsfera(simbolo, datos);
 
-    atomos.forEach((atomo, indice) => {
-        const columna = indice % columnas;
-        const fila = Math.floor(indice / columnas);
+    esfera.style.left = `${x - 24}px`;
+    esfera.style.top = `${y - 24}xp`;
+    esfera.style.pointerEvents = "auto";
+    esfera.style.cursor = "pointer";
 
-        atomo.esfera.style.left =
-            `${12 + columna * separacion}px`;
+    if (mensajeInicial) {
+        mensajeInicial.style.display = "none"
+    }
 
-        atomo.esfera.style.top =
-            `${24 + fila * separacion}px`;
+    visor.appendChild(esfera);
+    atomos.push({
+        id: siguienteId -1,
+        elemento: simbolo,
+        esfera: esfera,
+        x: x,
+        y: y
     });
-}
 
+    actualizarInformacion();
+
+    estado.textContent = `Átomo añadido: ${datos.nombre}`;
+}
 function agregarAtomo() {
     const opciones = Object.entries(elementos)
         .map(([simbolo, datos]) =>
