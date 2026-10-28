@@ -124,14 +124,14 @@ function crearEsfera(simbolo, datos) {
 }
 let elementoSeleccionado = "H";
 let modoColocacion = false;
-function colocarAtomos(x, y) {
+function colocarAtomo(x, y) {
     const simbolo = elementoSeleccionado;
     const datos = elementos[simbolo];
     const esfera = crearEsfera(simbolo, datos);
 
     esfera.style.left = `${x - 24}px`;
-    esfera.style.top = `${y - 24}xp`;
-    esfera.style.pointerEvents = "auto";
+    esfera.style.top = `${y - 24}px`;
+    esfera.style.pointerEvents = "none";
     esfera.style.cursor = "pointer";
 
     if (mensajeInicial) {
@@ -152,12 +152,6 @@ function colocarAtomos(x, y) {
     estado.textContent = `Átomo añadido: ${datos.nombre}`;
 }
 
-function agregarAtomo() {
-    const opciones = Object.entries(elementos)
-        .map(([simbolo, datos]) =>
-            `${simbolo} = ${datos.nombre}`
-        )
-        .join("\n");
 
     const respuesta = prompt(
         "¿Qué átomo quieres colocar?\n\n" +
