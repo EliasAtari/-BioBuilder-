@@ -2,8 +2,7 @@
 "use strict";
 
 const botonAgregar = document.getElementById("agregar-atomo");
-const botonEliminar = document.getElementById("eliminar"); 
-let modoEliminacion = false;
+const botonEliminar = document.getElementById("eliminar");
 const botonEnlace = document.getElementById("crear-enlace");
 const visor = document.getElementById("visor");
 const mensajeInicial = document.getElementById("mensaje-inicial");
@@ -26,6 +25,7 @@ const enlaces = [];
 
 let siguienteId = 0;
 let elementoSeleccionado = "H";
+let modoEliminacion = "false";
 let modoColocacion = false;
 let modoEnlace = false;
 let primerAtomo = null;
@@ -371,6 +371,7 @@ if (botonAgregar && visor && contadorAtomos && formula && estado) {
         const rect = visor.getBoundingClientRect();
         const x = evento.clientX - rect.left;
         const y = evento.clientY - rect.top;
+        
 if (modoEliminacion) {
     let cercano = null;
     let distanciaMinima = Infinity;
