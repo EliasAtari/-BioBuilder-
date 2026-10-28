@@ -2,10 +2,12 @@
 "use strict";
 
 const botonAgregar = document.getElementById("agregar-atomo");
+const botonEnlace = document.getElementById("crear-enlace");
 const visor = document.getElementById("visor");
 const mensajeInicial = document.getElementById("mensaje-inicial");
 
 const contadorAtomos = document.getElementById("cantidad-atomos");
+const contadorEnlaces = document.getElementById("cantidad-enlaces");
 const formula = document.getElementById("formula");
 const estado = document.getElementById("estado");
 
@@ -19,13 +21,20 @@ const elementos = {
 };
 
 const atomos = [];
+const enlaces = [];
 
 let siguienteId = 0;
 let elementoSeleccionado = "H";
 let modoColocacion = false;
+let modoEnlace = false;
+let primerAtomo = null;
 
 function actualizarInformacion() {
     contadorAtomos.textContent = atomos.length;
+
+    if (contadorEnlaces) {
+        contadorEnlaces.textContent = enlaces.length;
+    }
 
     const cantidades = {};
 
@@ -103,7 +112,6 @@ function crearEsfera(simbolo, datos) {
     circulo.setAttribute("fill", `url(#${id})`);
     circulo.setAttribute("stroke", "#ffffff66");
     circulo.setAttribute("stroke-width", "1");
-
     svg.appendChild(circulo);
 
     const letra = document.createElementNS(ns, "text");
@@ -114,10 +122,64 @@ function crearEsfera(simbolo, datos) {
     letra.setAttribute("font-weight", "bold");
     letra.setAttribute("fill", datos.texto);
     letra.textContent = simbolo;
-
     svg.appendChild(letra);
 
     return svg;
+}
+
+// Capa donde dibujamos los enlaces, detrás de las esferas.
+const capaEnlaces = document.createElementNS(
+    "http://www.w3.org/2000/svg",
+    "svg"
+);
+
+Object.assign(capaEnlaces.style, {
+    position: "absolute",
+    left: "0",
+    top: "0",
+    width: "100%",
+    height: "100%",
+    zIndex: "1",
+    pointerEvents: "none",
+    overflow: "visible"
+});
+
+capaEnlaces.setAttribute("aria-label", "Enlaces moleculares");
+
+if (visor) {
+    visor.style.position = "relative";
+    visor.insertBefore(capaEnlaces, visor.firstChild);
+}
+
+function actualizarDibujoEnlaces() {
+    if (!visor) return;
+
+    const ancho = visor.clientWidth;
+    const alto = visor.clientHeight;
+
+    capaEnlaces.setAttribute(
+        "viewBox",
+        `0 0 ${ancho} ${alto}`
+    );
+
+    capaEnlaces.replaceChildren();
+
+    for (const enlace of enlaces) {
+        const linea = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "line"
+        );
+
+        linea.setAttribute("x1", enlace.a.x);
+        linea.setAttribute("y1", enlace.a.y);
+        linea.setAttribute("x2", enlace.b.x);
+        linea.setAttribute("y2", enlace.b.y);
+        linea.setAttribute("stroke", "#d7e8f5");
+        linea.setAttribute("stroke-width", "5");
+        linea.setAttribute("stroke-linecap", "round");
+
+        capaEnlaces.appendChild(linea);
+    }
 }
 
 function agregarAtomo() {
@@ -144,6 +206,8 @@ function agregarAtomo() {
 
     elementoSeleccionado = simbolo;
     modoColocacion = true;
+    modoEnlace = false;
+    primerAtomo = null;
 
     estado.textContent =
         `Seleccionaste ${elementos[simbolo].nombre}. ` +
@@ -177,26 +241,120 @@ function colocarAtomo(x, y) {
     estado.textContent = `Átomo añadido: ${datos.nombre}`;
 }
 
+function iniciarCreacionEnlace() {
+    if (atomos.length < 2) {
+        estado.textContent =
+            "Añade al menos dos átomos antes de crear un enlace.";
+        return;
+    }
+
+    modoColocacion = false;
+    modoEnlace = true;
+    primerAtomo = null;
+
+    estado.textContent =
+        "Haz clic cerca del primer átomo.";
+}
+
+function seleccionarAtomoParaEnlace(x, y) {
+    // Busca el átomo más cercano al punto pulsado.
+    let encontrado = null;
+    let distanciaMinima = Infinity;
+
+    for (const atomo of atomos) {
+        const distancia = Math.hypot(
+            atomo.x - x,
+            atomo.y - y
+        );
+
+        if (distancia < distanciaMinima) {
+            distanciaMinima = distancia;
+            encontrado = atomo;
+        }
+    }
+
+    // Evita seleccionar un átomo si se pulsó demasiado lejos.
+    if (!encontrado || distanciaMinima > 32) {
+        estado.textContent =
+            "Pulsa cerca de una esfera para seleccionar el átomo.";
+        return;
+    }
+
+    if (primerAtomo === null) {
+        primerAtomo = encontrado;
+        estado.textContent =
+            `Primer átomo: ${encontrado.elemento}. ` +
+            "Ahora selecciona el segundo.";
+        return;
+    }
+
+    if (primerAtomo.id === encontrado.id) {
+        estado.textContent =
+            "Selecciona un átomo diferente.";
+        return;
+    }
+
+    const yaExiste = enlaces.some(enlace =>
+        (enlace.a.id === primerAtomo.id &&
+         enlace.b.id === encontrado.id) ||
+        (enlace.a.id === encontrado.id &&
+         enlace.b.id === primerAtomo.id)
+    );
+
+    if (yaExiste) {
+        estado.textContent = "Estos átomos ya están conectados.";
+        primerAtomo = null;
+        return;
+    }
+
+    enlaces.push({
+        a: primerAtomo,
+        b: encontrado
+    });
+
+    actualizarDibujoEnlaces();
+    actualizarInformacion();
+
+    estado.textContent =
+        `Enlace creado: ${primerAtomo.elemento}–${encontrado.elemento}.`;
+
+    primerAtomo = null;
+    modoEnlace = false;
+}
+
 if (botonAgregar && visor && contadorAtomos && formula && estado) {
-    console.log("Javascript esta cargando");
-    botonAgregar.addEventListener("click", () => alert("el boton funciona!"));
+    // Esta es la conexión real del botón para añadir átomos.
+    botonAgregar.addEventListener("click", agregarAtomo);
+
+    if (botonEnlace) {
+        botonEnlace.addEventListener(
+            "click",
+            iniciarCreacionEnlace
+        );
+    }
 
     visor.addEventListener("click", function(evento) {
-        if (!modoColocacion) return;
-
         const rect = visor.getBoundingClientRect();
 
         const x = evento.clientX - rect.left;
         const y = evento.clientY - rect.top;
 
-        colocarAtomo(x, y);
-        modoColocacion = false;
+        if (modoColocacion) {
+            colocarAtomo(x, y);
+            modoColocacion = false;
+            return;
+        }
+
+        if (modoEnlace) {
+            seleccionarAtomoParaEnlace(x, y);
+        }
     });
 
     actualizarInformacion();
+    actualizarDibujoEnlaces();
 } else {
     console.error(
         "BBM WEB: faltan elementos HTML necesarios."
     );
-                    }
-      
+    }
+        
