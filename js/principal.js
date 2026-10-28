@@ -257,7 +257,6 @@ function iniciarCreacionEnlace() {
 }
 
 function seleccionarAtomoParaEnlace(x, y) {
-    // Busca el átomo más cercano al punto pulsado.
     let encontrado = null;
     let distanciaMinima = Infinity;
 
@@ -273,7 +272,6 @@ function seleccionarAtomoParaEnlace(x, y) {
         }
     }
 
-    // Evita seleccionar un átomo si se pulsó demasiado lejos.
     if (!encontrado || distanciaMinima > 32) {
         estado.textContent =
             "Pulsa cerca de una esfera para seleccionar el átomo.";
@@ -323,7 +321,6 @@ function seleccionarAtomoParaEnlace(x, y) {
 }
 
 if (botonAgregar && visor && contadorAtomos && formula && estado) {
-    // Esta es la conexión real del botón para añadir átomos.
     botonAgregar.addEventListener("click", agregarAtomo);
 
     if (botonEnlace) {
