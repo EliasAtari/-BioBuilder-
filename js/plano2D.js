@@ -74,8 +74,96 @@ function obtenerEtiqueta() {
   return elemento;
 }
 
-function dibujarAtomo() {
+function dibujarAtomo(contenedor) {
+  const etiqueta = this.obtenerEtiqueta();
+
+  if  (etiqueta === "") {
+    return null;
+  }
+
+  const texto = document.createElementNS(https://www.w3.org/2000/svg",
+                                         "text"
+);
+  texto.setAttribute("x", this.atomo.x);
+    texto.setAttribute("y", this.atomo.y);
+    texto.setAttribute("text-anchor", "middle");
+    texto.setAttribute("dominant-baseline", "middle");
+    texto.setAttribute("fill", "#eaf5ff");
+    texto.setAttribute("font-size", "16");
+    texto.textContent = etiqueta;
+
+    contenedor.appendChild(texto);
+
+    return texto;
 }
 
-function dibujarEnlaces() {
+function dibujarEnlaces(contenedor) {
+  const uniones = this.obtenerUniones();
+
+  for (const enlace of uniones) {
+
+    if (enlace.a !== this.atomo.id) {
+      continue;
+    }
+    const atomoA = atomos.find(
+            atomo => atomo.id === enlace.a
+        );
+
+        const atomoB = atomos.find(
+            atomo => atomo.id === enlace.b
+        );
+
+        if (!atomoA || !atomoB) {
+            continue;
+        }
+
+        const dx = atomoB.x - atomoA.x;
+        const dy = atomoB.y - atomoA.y;
+        const distancia = Math.hypot(dx, dy);
+
+        if (distancia === 0) {
+            continue;
+        }
+
+        const offsetX = (-dy / distancia) * 4;
+        const offsetY = (dx / distancia) * 4;
+
+        const orden = enlace.orden || 1;
+        const cantidadLineas = Math.max(
+            1,
+            Math.min(3, orden)
+        );
+
+        for (let i = 0; i < cantidadLineas; i++) {
+            const desplazamiento =
+                (i - (cantidadLineas - 1) / 2) * 8;
+
+            const linea = document.createElementNS(
+                "http://www.w3.org/2000/svg",
+                "line"
+            );
+
+            linea.setAttribute(
+                "x1",
+                atomoA.x + offsetX * desplazamiento / 4
+            );
+            linea.setAttribute(
+                "y1",
+                atomoA.y + offsetY * desplazamiento / 4
+            );
+            linea.setAttribute(
+                "x2",
+                atomoB.x + offsetX * desplazamiento / 4
+            );
+            linea.setAttribute(
+                "y2",
+                atomoB.y + offsetY * desplazamiento / 4
+            );
+
+            linea.setAttribute("stroke", "#eaf5ff");
+            linea.setAttribute("stroke-width", "2");
+
+            contenedor.appendChild(linea);
+        }
+    }
 }
