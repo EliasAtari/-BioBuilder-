@@ -57,7 +57,6 @@ let modoColocacion = false;
 let modoEnlace = false;
 let modoEliminacion = false;
 let primerAtomo = null;
-
 let dibujoEnlaces = null;
 
 if (visor) {
@@ -288,7 +287,6 @@ function actualizarDibujoEnlaces() {
 
         if (longitud === 0) continue;
 
-        // Vector perpendicular para separar las líneas.
         const px = -dy / longitud;
         const py = dx / longitud;
 
@@ -332,7 +330,8 @@ function actualizarDibujoEnlaces() {
 
 function valenciaUsada(atomo) {
     let total = 0,
-        for (const enlace of enlaces) {
+        
+    for (const enlace of enlaces) {
         if (
             enlace.a.id === atomo.id ||
             enlace.b.id === atomo.id
@@ -341,6 +340,27 @@ function valenciaUsada(atomo) {
         }
     }
     return total;
+}
+
+function buscarAtomoCercano(x, y) {
+    let cercano = null;
+    let distanciaMinima = Infinity;
+
+    for (const atomo of atomos) {
+        const distancia = Math.hypot(
+            atomo.x - x,
+            atomo.y - y
+        );
+
+        if (distancia < distanciaMinima) {
+            distanciaMinima = distancia;
+            cercano = atomo;
+        }
+    }
+
+    return cercano && distanciaMinima <= 32
+        ? cercano
+        : null;
 }
 
 function seleccionarAtomoParaEnlace(x, y) {
@@ -436,6 +456,18 @@ function seleccionarAtomoParaEnlace(x, y) {
 
         estado.textContent =
             `Enlace ${nombres[nuevoOrden]} creado correctamente.`;
+    }
+}
+
+function iniciarCreacionEnlace() {
+    modoColocacion = false;
+    modoEliminacion = false;
+    modoEnlace = true;
+    primerAtomo = null;
+
+    if (estado) {
+        estado.textContent =
+            "Haz clic en el primer átomo y después en el segundo.";
     }
 }
 
