@@ -1,7 +1,8 @@
 
 "use strict";
 
-const visor2D = document.getElementById("visor");
+const contenedorPlano2D = document.getElementById("contenedor-plano2D");
+const dibujoPlano2D = document.getElementById("dibujo-plano2D");
 
 let zoom2D = 1;
 let desplazamientoX = 0;
