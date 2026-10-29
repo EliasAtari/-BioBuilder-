@@ -166,5 +166,35 @@ function dibujarEnlaces(contenedor) {
 
             contenedor.appendChild(linea);
         }
+      }
     }
+  }
+
+function dibujarPlano2D() {
+  if (!dibujoPlano2D) {
+    return;
+  }
+
+dibujoPlano2D.replaceChildren();
+  for (atomo of atomos) {
+    const atomo2D = new Atomo2D(atomo);
+
+    atomo2D.dibujarEnlaces(dibujoPlano2D);
+  }
+  
+  for (atomo of atomos) {
+
+  const atomo2D = new Atomo2D(atomo);
+
+  atomo2D.dibujarAtomo(dibujoPlano2D);
+  }
+}
+
+function activarPlano2D(activar) {
+  plano2DActivo = activar;
+  contenedorPlano2D.hidden = !activar;
+  
+  if (activar) {
+  dibujarPlano2D();
+  }
 }
