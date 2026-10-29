@@ -263,6 +263,7 @@ function colocarAtomo(x, y) {
     });
 
     actualizarInformacion();
+    actualizarVista2D();
 
     if (estado) {
         estado.textContent = `Átomo añadido: ${datos.nombre}`;
@@ -452,6 +453,7 @@ function seleccionarAtomoParaEnlace(x, y) {
 
     actualizarDibujoEnlaces();
     actualizarInformacion();
+    actualizarVista2D();
 
     if (estado) {
         const nombres = {
@@ -509,6 +511,7 @@ function eliminarAtomo(atomo) {
 
     actualizarDibujoEnlaces();
     actualizarInformacion();
+    actualizarVista2D();
 
     if (atomos.length === 0 && mensajeInicial) {
         mensajeInicial.style.display = "";
