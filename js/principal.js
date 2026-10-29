@@ -329,7 +329,7 @@ function actualizarDibujoEnlaces() {
 }
 
 function valenciaUsada(atomo) {
-    let total = 0,
+    let total = 0;
         
     for (const enlace of enlaces) {
         if (
