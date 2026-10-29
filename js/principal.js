@@ -10,17 +10,44 @@ const contadorAtomos = document.getElementById("cantidad-atomos");
 const contadorEnlaces = document.getElementById("cantidad-enlaces");
 const formula = document.getElementById("formula");
 const estado = document.getElementById("estado");
-
-
 const elementos = {
-    H: { nombre: "Hidrógeno", color: "#f2f2f2", texto: "#202020" },
-    C: { nombre: "Carbono", color: "#50545c", texto: "#ffffff" },
-    N: { nombre: "Nitrógeno", color: "#4169e1", texto: "#ffffff" },
-    O: { nombre: "Oxígeno", color: "#ed4141", texto: "#ffffff" },
-    S: { nombre: "Azufre", color: "#e6ce35", texto: "#202020" },
-    P: { nombre: "Fósforo", color: "#e88a36", texto: "#202020" }
+    H: {
+        nombre: "Hidrógeno",
+        color: "#f2f2f2",
+        texto: "#202020",
+        valenciaMaxima: 1
+    },
+    C: {
+        nombre: "Carbono",
+        color: "#50545c",
+        texto: "#ffffff",
+        valenciaMaxima: 4
+    },
+    N: {
+        nombre: "Nitrógeno",
+        color: "#4169e1",
+        texto: "#ffffff",
+        valenciaMaxima: 3
+    },
+    O: {
+        nombre: "Oxígeno",
+        color: "#ed4141",
+        texto: "#ffffff",
+        valenciaMaxima: 2
+    },
+    S: {
+        nombre: "Azufre",
+        color: "#e6ce35",
+        texto: "#202020",
+        valenciaMaxima: 2
+    },
+    P: {
+        nombre: "Fósforo",
+        color: "#e88a36",
+        texto: "#202020",
+        valenciaMaxima: 3
+    }
 };
-
 const atomos = [];
 const enlaces = [];
 
@@ -237,7 +264,6 @@ function colocarAtomo(x, y) {
     }
 }
 
-
 function actualizarDibujoEnlaces() {
     if (!dibujoEnlaces || !visor) return;
 
@@ -246,67 +272,85 @@ function actualizarDibujoEnlaces() {
 
     dibujoEnlaces.setAttribute("width", ancho);
     dibujoEnlaces.setAttribute("height", alto);
-    dibujoEnlaces.setAttribute("viewBox", `0 0 ${ancho} ${alto}`);
+    dibujoEnlaces.setAttribute(
+        "viewBox",
+        `0 0 ${ancho} ${alto}`
+    );
 
     dibujoEnlaces.replaceChildren();
 
     const ns = "http://www.w3.org/2000/svg";
 
     for (const enlace of enlaces) {
-        const linea = document.createElementNS(ns, "line");
+        const dx = enlace.b.x - enlace.a.x;
+        const dy = enlace.b.y - enlace.a.y;
+        const longitud = Math.hypot(dx, dy);
 
-        linea.setAttribute("x1", enlace.a.x);
-        linea.setAttribute("y1", enlace.a.y);
-        linea.setAttribute("x2", enlace.b.x);
-        linea.setAttribute("y2", enlace.b.y);
+        if (longitud === 0) continue;
 
-        linea.setAttribute("stroke", "#b9d5e8");
-        linea.setAttribute("stroke-width", "4");
-        linea.setAttribute("stroke-linecap", "round");
+        // Vector perpendicular para separar las líneas.
+        const px = -dy / longitud;
+        const py = dx / longitud;
 
-        dibujoEnlaces.appendChild(linea);
-    }
-}
+        const orden = enlace.orden || 1;
+        const separacion = 5;
 
+        for (let i = 0; i < orden; i++) {
+            const desplazamiento =
+                (i - (orden - 1) / 2) * separacion;
 
-function iniciarCreacionEnlace() {
-    modoColocacion = false;
-    modoEliminacion = false;
-    modoEnlace = true;
-    primerAtomo = null;
+            const linea = document.createElementNS(
+                ns,
+                "line"
+            );
 
-    if (estado) {
-        estado.textContent =
-            "Haz clic en el primer átomo y después en el segundo.";
-    }
-}
+            linea.setAttribute(
+                "x1",
+                enlace.a.x + px * desplazamiento
+            );
+            linea.setAttribute(
+                "y1",
+                enlace.a.y + py * desplazamiento
+            );
+            linea.setAttribute(
+                "x2",
+                enlace.b.x + px * desplazamiento
+            );
+            linea.setAttribute(
+                "y2",
+                enlace.b.y + py * desplazamiento
+            );
 
-function buscarAtomoCercano(x, y) {
-    let cercano = null;
-    let distanciaMinima = Infinity;
+            linea.setAttribute("stroke", "#b9d5e8");
+            linea.setAttribute("stroke-width", "3");
+            linea.setAttribute("stroke-linecap", "round");
 
-    for (const atomo of atomos) {
-        const distancia = Math.hypot(
-            atomo.x - x,
-            atomo.y - y
-        );
-
-        if (distancia < distanciaMinima) {
-            distanciaMinima = distancia;
-            cercano = atomo;
+            dibujoEnlaces.appendChild(linea);
         }
     }
+}
 
-    return cercano && distanciaMinima <= 32
-        ? cercano
-        : null;
+function valenciaUsada(atomo) {
+    let total = 0,
+        for (const enlace of enlaces) {
+        if (
+            enlace.a.id === atomo.id ||
+            enlace.b.id === atomo.id
+        ) {
+            total += enlace.orden;
+        }
+    }
+    return total;
 }
 
 function seleccionarAtomoParaEnlace(x, y) {
     const atomo = buscarAtomoCercano(x, y);
 
     if (!atomo) {
-        if (estado) estado.textContent = "Haz clic cerca de una esfera.";
+        if (estado) {
+            estado.textContent =
+                "Haz clic cerca de una esfera.";
+        }
         return;
     }
 
@@ -326,37 +370,74 @@ function seleccionarAtomoParaEnlace(x, y) {
             estado.textContent =
                 "Selecciona un átomo diferente.";
         }
-
         return;
     }
 
-    const yaExiste = enlaces.some(enlace =>
-        (enlace.a.id === primerAtomo.id &&
-         enlace.b.id === atomo.id) ||
-        (enlace.a.id === atomo.id &&
-         enlace.b.id === primerAtomo.id)
+    const a = primerAtomo;
+    const b = atomo;
+
+    const existente = enlaces.find(enlace =>
+        (enlace.a.id === a.id && enlace.b.id === b.id) ||
+        (enlace.a.id === b.id && enlace.b.id === a.id)
     );
 
-    if (yaExiste) {
-        if (estado) estado.textContent = "Estos átomos ya están enlazados.";
+    const ordenActual = existente ? existente.orden : 0;
+    const nuevoOrden = ordenActual + 1;
+
+    if (nuevoOrden > 3) {
+        if (estado) {
+            estado.textContent =
+                "El enlace triple ya es el máximo permitido.";
+        }
+
         primerAtomo = null;
         return;
     }
 
-    enlaces.push({
-        a: primerAtomo,
-        b: atomo
-    });
+    const datosA = elementos[a.elemento];
+    const datosB = elementos[b.elemento];
+
+    const usadaA = valenciaUsada(a);
+    const usadaB = valenciaUsada(b);
+    if (
+        usadaA + 1 > datosA.valenciaMaxima ||
+        usadaB + 1 > datosB.valenciaMaxima
+    ) {
+        if (estado) {
+            estado.textContent =
+                "Enlace rechazado: uno de los átomos alcanzó su límite de valencia.";
+        }
+
+        primerAtomo = null;
+        return;
+    }
+
+    if (existente) {
+        existente.orden = nuevoOrden;
+    } else {
+        enlaces.push({
+            a,
+            b,
+            orden: 1
+        });
+    }
 
     primerAtomo = null;
-    modoEnlace = false;
 
     actualizarDibujoEnlaces();
     actualizarInformacion();
 
-    if (estado) estado.textContent = "Enlace creado.";
-}
+    if (estado) {
+        const nombres = {
+            1: "simple",
+            2: "doble",
+            3: "triple"
+        };
 
+        estado.textContent =
+            `Enlace ${nombres[nuevoOrden]} creado correctamente.`;
+    }
+}
 
 function iniciarEliminacion() {
     modoColocacion = false;
