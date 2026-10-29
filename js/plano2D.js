@@ -24,8 +24,8 @@ function obtenerUniones() {
 
   for (const enlace of enlaces) {
     if (
-      enlace.a === this.atomo.id ||
-      enlace.b === this.atomo.id)
+      enlace.a === this.atomo.a.id ||
+      enlace.b === this.atomo.b.id)
     {
       uniones.push(enlace);
     }
@@ -38,18 +38,12 @@ function contarHidrogenos() {
   let cantidad = 0:
 
   for (const enlace of uniones) {
-    let idVecino;
+            const vecino =
+            enlace.a.id === this.atomo.id
+                ? enlace.b
+                : enlace.a;
 
-    if (enlace.a === this.atomo.id) {
-      idVecino = enlace.b;
-    } else {
-      idVecino = enlace.a;
-    }
-    const vecino = atomos.find(
-            atomo => atomo.id === idVecino
-        );
-
-        if (vecino && vecino.elemento === "H") {
+        if (vecino.elemento === "H") {
             cantidad += enlace.orden;
         }
     }
@@ -72,6 +66,7 @@ function obtenerEtiqueta() {
     return elemento + "H" +
       (hidrogenos > 1 ? hidrogenos : "");
   }
+  
   return elemento;
 }
 
@@ -99,41 +94,27 @@ function dibujarAtomo(contenedor) {
 }
 
 function dibujarEnlaces(contenedor) {
-  const uniones = this.obtenerUniones();
+    const uniones = this.obtenerUniones();
+  
+    for (const enlace of uniones) {
 
-  for (const enlace of uniones) {
-
-    if (enlace.a !== this.atomo.id) {
-      continue;
-    }
-    const atomoA = atomos.find(
-            atomo => atomo.id === enlace.a
-        );
-
-        const atomoB = atomos.find(
-            atomo => atomo.id === enlace.b
-        );
-
-        if (!atomoA || !atomoB) {
+        if (enlace.a.id !== this.atomo.id) {
             continue;
         }
+
+        const atomoA = enlace.a;
+        const atomoB = enlace.b;
 
         const dx = atomoB.x - atomoA.x;
         const dy = atomoB.y - atomoA.y;
         const distancia = Math.hypot(dx, dy);
 
-        if (distancia === 0) {
-            continue;
-        }
+        if (distancia === 0) continue;
 
-        const offsetX = (-dy / distancia) * 4;
-        const offsetY = (dx / distancia) * 4;
+        const offsetX = -dy / distancia;
+        const offsetY = dx / distancia;
 
-        const orden = enlace.orden || 1;
-        const cantidadLineas = Math.max(
-            1,
-            Math.min(3, orden)
-        );
+        const cantidadLineas = enlace.orden || 1;
 
         for (let i = 0; i < cantidadLineas; i++) {
             const desplazamiento =
@@ -146,30 +127,30 @@ function dibujarEnlaces(contenedor) {
 
             linea.setAttribute(
                 "x1",
-                atomoA.x + offsetX * desplazamiento / 4
+                atomoA.x + offsetX * desplazamiento
             );
             linea.setAttribute(
                 "y1",
-                atomoA.y + offsetY * desplazamiento / 4
+                atomoA.y + offsetY * desplazamiento
             );
             linea.setAttribute(
                 "x2",
-                atomoB.x + offsetX * desplazamiento / 4
+                atomoB.x + offsetX * desplazamiento
             );
             linea.setAttribute(
                 "y2",
-                atomoB.y + offsetY * desplazamiento / 4
+                atomoB.y + offsetY * desplazamiento
             );
 
             linea.setAttribute("stroke", "#eaf5ff");
             linea.setAttribute("stroke-width", "2");
 
             contenedor.appendChild(linea);
-        }
+         }
       }
-    }
-  }
-
+   } 
+}
+          
 function dibujarPlano2D() {
   if (!dibujoPlano2D) {
     return;
