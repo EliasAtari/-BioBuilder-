@@ -59,14 +59,6 @@ let modoEliminacion = false;
 let primerAtomo = null;
 let dibujoEnlaces = null;
 
-let zoom2D = 1;
-let desplazamientoX = 0;
-let desplazamientoY = 0;
-
-let arrastrandoPlano = false;
-let inicioArrastreX = 0;
-let inicioArrastreY = 0;
-
 if (visor) {
     if (!visor.style.position) {
         visor.style.position = "relative";
