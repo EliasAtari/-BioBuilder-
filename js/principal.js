@@ -8,53 +8,7 @@ const botonVista2D = document.getElementById("modo-2d");
 const botonVista3D = document.getElementById("modo-3d");
 const visor = document.getElementById("visor");
 const mensajeInicial = document.getElementById("mensaje-inicial");
-const contadorAtomos = document.getElementById("cantidad-atomos");
-const contadorEnlaces = document.getElementById("cantidad-enlaces");
-const formula = document.getElementById("formula");
-const estado = document.getElementById("estado");
-const elementos = {
-    H: {
-        nombre: "Hidrógeno",
-        color: "#f2f2f2",
-        texto: "#202020",
-        valenciaMaxima: 1
-    },
-    C: {
-        nombre: "Carbono",
-        color: "#50545c",
-        texto: "#ffffff",
-        valenciaMaxima: 4
-    },
-    N: {
-        nombre: "Nitrógeno",
-        color: "#4169e1",
-        texto: "#ffffff",
-        valenciaMaxima: 3
-    },
-    O: {
-        nombre: "Oxígeno",
-        color: "#ed4141",
-        texto: "#ffffff",
-        valenciaMaxima: 2
-    },
-    S: {
-        nombre: "Azufre",
-        color: "#e6ce35",
-        texto: "#202020",
-        valenciaMaxima: 2
-    },
-    P: {
-        nombre: "Fósforo",
-        color: "#e88a36",
-        texto: "#202020",
-        valenciaMaxima: 3
-    }
-};
-const atomos = [];
-const enlaces = [];
 
-let siguienteId = 0;
-let elementoSeleccionado = "H";
 let modoColocacion = false;
 let modoEnlace = false;
 let modoEliminacion = false;
@@ -109,43 +63,6 @@ if (visor) {
 
     visor.insertBefore(dibujoEnlaces, visor.firstChild);
 }
-
-
-function actualizarInformacion() {
-    if (contadorAtomos) {
-        contadorAtomos.textContent = atomos.length;
-    }
-
-    if (contadorEnlaces) {
-        contadorEnlaces.textContent = enlaces.length;
-    }
-
-    if (!formula) return;
-
-    const cantidades = {};
-
-    for (const atomo of atomos) {
-        cantidades[atomo.elemento] =
-            (cantidades[atomo.elemento] || 0) + 1;
-    }
-
-    const prioridad = { C: 0, H: 1 };
-
-    const orden = Object.keys(cantidades).sort((a, b) =>
-        (prioridad[a] ?? 2) - (prioridad[b] ?? 2) ||
-        a.localeCompare(b)
-    );
-
-    formula.textContent = orden.length
-        ? orden.map(simbolo =>
-            simbolo +
-            (cantidades[simbolo] > 1
-                ? cantidades[simbolo]
-                : "")
-        ).join("")
-        : "—";
-}
-
 
 function crearEsfera(simbolo, datos, id) {
     const ns = "http://www.w3.org/2000/svg";
