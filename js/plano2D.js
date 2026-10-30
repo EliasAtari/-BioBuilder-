@@ -12,7 +12,7 @@ let arrastrandoPlano = false;
 let inicioArrastreX = 0;
 let inicioArrastreY = 0;
 
-let plano2DActivo = true;
+let plano2DActivo = false;
 
 class Atomo2D {
     constructor(atomo) {
