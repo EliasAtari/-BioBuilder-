@@ -151,9 +151,9 @@ class Atomo2D {
 }
 
 function dibujarPlano2D() {
-    if (!dibujoPlano2D || !contenedorPlano2D) {
+        if (!dibujoPlano2D || !contenedorPlano2D || !plano2DActivo) {
         return;
-    }
+        }
 
     const ancho = contenedorPlano2D.clientWidth;
     const alto = contenedorPlano2D.clientHeight;
