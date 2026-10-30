@@ -11,22 +11,6 @@
   <title>BBM WEB - BioBuilder</title>
   <link rel="stylesheet" href="css/estilos.css">
 </head>
-  <script>
-    if ("service-worker" in navigator) {
-      window.addEventListener("load", () => {
-        navigator.seviceWorker.registrer("./service-worker.js")
-          .then(() => {
-            
-            console.log("Biobuilder Web offline preparado");
-          })
-          .catch((error) => {
-
-            console.error("Biobuilder offline tuvo un error en archivo Service Worker:", error);
-          });
-      });
-    }
-      </script>
-  
 <body>
 
   <header class="barra-superior">
@@ -188,6 +172,23 @@
   
     <script src="js/plano2D.js"></script>
     <script src="js/principal.js"></script>
+  
+<script>
+    if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+            navigator.serviceWorker.register("./service-worker.js")
+                .then(() => {
+                    console.log("BioBuilder Web: modo offline preparado");
+                })
+                .catch((error) => {
+                    console.error(
+                        "Error al registrar el Service Worker:",
+                        error
+                    );
+                });
+        });
+    }
+</script>
 
 </body>
 </html>
