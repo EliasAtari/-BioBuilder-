@@ -4,8 +4,8 @@
 const botonAgregar = document.getElementById("agregar-atomo");
 const botonEliminar = document.getElementById("eliminar");
 const botonEnlace = document.getElementById("crear-enlace");
-const botonVista2D = document.getElementById("vista-2D");
-const botonVista3D = document.getElementById("vista-3D");
+const botonVista2D = document.getElementById("modo-2D");
+const botonVista3D = document.getElementById("modo-3D");
 const visor = document.getElementById("visor");
 const mensajeInicial = document.getElementById("mensaje-inicial");
 const contadorAtomos = document.getElementById("cantidad-atomos");
@@ -70,7 +70,7 @@ function actualizarVista2D() {
 function alternarVista(vista) {
     const mostrar2D = vista === "2D";
 
-    activarPlano(mostrar2D);
+    activarPlano2D(mostrar2D);
 
     if (dibujoEnlaces) {
 
