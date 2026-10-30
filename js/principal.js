@@ -4,6 +4,8 @@
 const botonAgregar = document.getElementById("agregar-atomo");
 const botonEliminar = document.getElementById("eliminar");
 const botonEnlace = document.getElementById("crear-enlace");
+const botonVista2D = document.getElementById("vista-2D");
+const botonVista3D = document.getElementById("vista-3D");
 const visor = document.getElementById("visor");
 const mensajeInicial = document.getElementById("mensaje-inicial");
 const contadorAtomos = document.getElementById("cantidad-atomos");
@@ -59,9 +61,20 @@ let modoEliminacion = false;
 let primerAtomo = null;
 let dibujoEnlaces = null;
 
-function actualizarVista2D() {
-    if (typeof dibujarPlano2D === "function") {
-        dibujarPlano2D();
+function alternarVista(vista) {
+    const mostrar2D = vista === "2D";
+
+    activarPlano(mostrar2D);
+
+    if (dibujoEnlaces) {
+
+        dibujoEnlaces.style.display =
+            mostrar2D ? "none" : "";
+    }
+
+    for (const atomo of atomos) {
+        atomo.esfera.style.display =
+            mostrar2D ? "none" : "";
     }
 }
 
@@ -535,6 +548,17 @@ if (botonEliminar) {
     botonEliminar.addEventListener("click", iniciarEliminacion);
 }
 
+if (botonVista2D) {
+    botonVista2D.addEventListener("click", () => {
+        alternarVista("2D");
+    });
+}
+
+if (botonVista3D) {
+    botonVista3D.addEventListener("click", () => {
+        alternarVista("3D");
+    });
+}
 
 if (visor) {
     visor.addEventListener("click", function(evento) {
@@ -575,6 +599,7 @@ window.addEventListener("resize", actualizarDibujoEnlaces);
 
 actualizarInformacion();
 actualizarDibujoEnlaces();
+alternarVista("3D");
 
 console.log("BBM WEB: JavaScript cargado correctamente.");
   
