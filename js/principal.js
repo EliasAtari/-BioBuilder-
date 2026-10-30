@@ -8,7 +8,7 @@ const botonVista2D = document.getElementById("modo-2d");
 const botonVista3D = document.getElementById("modo-3d");
 const visor = document.getElementById("visor");
 const mensajeInicial = document.getElementById("mensaje-inicial");
-
+                                        
 let modoColocacion = false;
 let modoEnlace = false;
 let modoEliminacion = false;
