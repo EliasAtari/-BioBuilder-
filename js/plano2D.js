@@ -188,4 +188,3 @@ function activarPlano2D(activar) {
         dibujarPlano2D();
     }
                   }
-                  
