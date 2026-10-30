@@ -556,6 +556,7 @@ if (botonEliminar) {
 
 if (botonVista2D) {
     botonVista2D.addEventListener("click", () => {
+        console.log("Plano2D funcionando");
         alternarVista("2D");
     });
 }
