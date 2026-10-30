@@ -61,6 +61,12 @@ let modoEliminacion = false;
 let primerAtomo = null;
 let dibujoEnlaces = null;
 
+function actualizarVista2D() {
+    if (typeof dibujarPlano2D === "function") {
+        dibujarPlano2D();
+    }
+}
+
 function alternarVista(vista) {
     const mostrar2D = vista === "2D";
 
