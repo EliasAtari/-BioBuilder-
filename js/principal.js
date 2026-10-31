@@ -1,6 +1,14 @@
 
 "use strict";
 
+window.onerror = (mensaje, archivo, linea, columna) => {
+    alert(
+        "Error: " + mensaje +
+        "\nArchivo: " + archivo +
+        "\nLínea: " + linea
+    );
+};
+
 const botonAgregar = document.getElementById("agregar-atomo");
 const botonEliminar = document.getElementById("eliminar");
 const botonEnlace = document.getElementById("crear-enlace");
