@@ -44,3 +44,9 @@ const atomos = [];
 const enlaces = [];
 
 let siguienteId = 0;
+
+const configuracionMolecular = {
+      enlaceMaximo: 3,
+      radioAtomo3D: 24,
+      radioAtomo2D: 12
+};
