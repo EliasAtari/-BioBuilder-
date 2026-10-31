@@ -43,6 +43,6 @@ const elementos = {
 const atomos = [];
 const enlaces = [];
 
-let siguinteId = 0;
+let siguienteId = 0;
 
 alert("DATOS MOLECULARES CARGADO");
