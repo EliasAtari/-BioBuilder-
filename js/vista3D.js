@@ -1,29 +1,67 @@
 
 "use strict";
 
-function crearEsfera(simbolo, datos, id) {
-    const ns = "http://www.w3.org/2000/svg";
+let capaAtomos3D = null;
+let dibujoEnlaces3D = null;
 
-    const svg = document.createElementNS(ns, "svg");
+const espacioSVG = "http://www.w3.org/2000/svg";
+
+function iniciarVista3D() {
+    const visor = document.getElementById("visor");
+
+    if (!visor) {
+        throw new Error("No se encontró el visor molecular.");
+    }
+
+    visor.style.position = "relative";
+
+    dibujoEnlaces3D = document.createElementNS(
+        espacioSVG,
+        "svg"
+    );
+
+    dibujoEnlaces3D.style.position = "absolute";
+    dibujoEnlaces3D.style.inset = "0";
+    dibujoEnlaces3D.style.width = "100%";
+    dibujoEnlaces3D.style.height = "100%";
+    dibujoEnlaces3D.style.overflow = "visible";
+    dibujoEnlaces3D.style.pointerEvents = "none";
+    dibujoEnlaces3D.style.zIndex = "1";
+
+    capaAtomos3D = document.createElement("div");
+
+    Object.assign(capaAtomos3D.style, {
+        position: "absolute",
+        inset: "0",
+        pointerEvents: "none",
+        zIndex: "2"
+    });
+
+    visor.appendChild(dibujoEnlaces3D);
+    visor.appendChild(capaAtomos3D);
+
+    actualizarVista3D();
+}
+
+function crearEsfera(simbolo, datos, id) {
+    const svg = document.createElementNS(
+        espacioSVG,
+        "svg"
+    );
 
     svg.setAttribute("width", "48");
     svg.setAttribute("height", "48");
     svg.setAttribute("viewBox", "0 0 48 48");
-    svg.setAttribute("role", "img");
-    svg.setAttribute("aria-label", datos.nombre);
 
-    Object.assign(svg.style, {
-        position: "absolute",
-        width: "48px",
-        height: "48px",
-        display: "block",
-        overflow: "visible",
-        zIndex: "2",
-        pointerEvents: "none"
-    });
+    const defs = document.createElementNS(
+        espacioSVG,
+        "defs"
+    );
 
-    const defs = document.createElementNS(ns, "defs");
-    const gradiente = document.createElementNS(ns, "radialGradient");
+    const gradiente = document.createElementNS(
+        espacioSVG,
+        "radialGradient"
+    );
 
     gradiente.setAttribute("id", `bbm-gradiente-${id}`);
     gradiente.setAttribute("cx", "30%");
@@ -37,49 +75,78 @@ function crearEsfera(simbolo, datos, id) {
     ];
 
     for (const [posicion, color] of paradas) {
-        const stop = document.createElementNS(ns, "stop");
+        const stop = document.createElementNS(
+            espacioSVG,
+            "stop"
+        );
+
         stop.setAttribute("offset", posicion);
         stop.setAttribute("stop-color", color);
+
         gradiente.appendChild(stop);
     }
 
     defs.appendChild(gradiente);
     svg.appendChild(defs);
 
-    const circulo = document.createElementNS(ns, "circle");
+    const circulo = document.createElementNS(
+        espacioSVG,
+        "circle"
+    );
 
     circulo.setAttribute("cx", "24");
     circulo.setAttribute("cy", "24");
-    circulo.setAttribute("r", "23");
-    circulo.setAttribute("fill", `url(#bbm-gradiente-${id})`);
-    circulo.setAttribute("stroke", "none");
+    circulo.setAttribute("r", "22");
+    circulo.setAttribute(
+        "fill",
+        `url(#bbm-gradiente-${id})`
+    );
 
     svg.appendChild(circulo);
 
-    return svg;
-}
-alert("crearEsfera se declaró correctamente");
-
-function actualizarDibujoEnlaces() {
-    if (!dibujoEnlaces || !visor) return;
-
-    const ancho = visor.clientWidth;
-    const alto = visor.clientHeight;
-
-    dibujoEnlaces.setAttribute("width", ancho);
-    dibujoEnlaces.setAttribute("height", alto);
-    dibujoEnlaces.setAttribute(
-        "viewBox",
-        `0 0 ${ancho} ${alto}`
+    const texto = document.createElementNS(
+        espacioSVG,
+        "text"
     );
 
-    dibujoEnlaces.replaceChildren();
+    texto.setAttribute("x", "24");
+    texto.setAttribute("y", "25");
+    texto.setAttribute("text-anchor", "middle");
+    texto.setAttribute("dominant-baseline", "middle");
+    texto.setAttribute("font-size", "15");
+    texto.setAttribute("font-weight", "bold");
+    texto.setAttribute("fill", datos.texto);
+    texto.textContent = simbolo;
 
-    const ns = "http://www.w3.org/2000/svg";
+    svg.appendChild(texto);
+
+    Object.assign(svg.style, {
+        position: "absolute",
+        width: "48px",
+        height: "48px",
+        transform: "translate(-50%, -50%)",
+        pointerEvents: "none"
+    });
+
+    return svg;
+}
+
+function dibujarEnlaces3D() {
+    if (!dibujoEnlaces3D) return;
+
+    dibujoEnlaces3D.replaceChildren();
+
+    const ancho = dibujoEnlaces3D.clientWidth;
+    const alto = dibujoEnlaces3D.clientHeight;
+
+    dibujoEnlaces3D.setAttribute("viewBox", `0 0 ${ancho} ${alto}`);
 
     for (const enlace of enlaces) {
-        const dx = enlace.b.x - enlace.a.x;
-        const dy = enlace.b.y - enlace.a.y;
+        const a = molecularAPantalla(enlace.a.x, enlace.a.y);
+        const b = molecularAPantalla(enlace.b.x, enlace.b.y);
+
+        const dx = b.x - a.x;
+        const dy = b.y - a.y;
         const longitud = Math.hypot(dx, dy);
 
         if (longitud === 0) continue;
@@ -94,30 +161,55 @@ function actualizarDibujoEnlaces() {
             const desplazamiento =
                 (i - (orden - 1) / 2) * separacion;
 
-            const linea = document.createElementNS(ns, "line");
+            const linea = document.createElementNS(
+                espacioSVG,
+                "line"
+            );
 
-            linea.setAttribute(
-                "x1",
-                enlace.a.x + px * desplazamiento
-            );
-            linea.setAttribute(
-                "y1",
-                enlace.a.y + py * desplazamiento
-            );
-            linea.setAttribute(
-                "x2",
-                enlace.b.x + px * desplazamiento
-            );
-            linea.setAttribute(
-                "y2",
-                enlace.b.y + py * desplazamiento
-            );
+            linea.setAttribute("x1", a.x + px * desplazamiento);
+            linea.setAttribute("y1", a.y + py * desplazamiento);
+            linea.setAttribute("x2", b.x + px * desplazamiento);
+            linea.setAttribute("y2", b.y + py * desplazamiento);
 
             linea.setAttribute("stroke", "#b9d5e8");
             linea.setAttribute("stroke-width", "3");
             linea.setAttribute("stroke-linecap", "round");
 
-            dibujoEnlaces.appendChild(linea);
+            dibujoEnlaces3D.appendChild(linea);
         }
     }
 }
+
+function dibujarAtomos3D() {
+    if (!capaAtomos3D) return;
+
+    capaAtomos3D.replaceChildren();
+
+    for (const atomo of atomos) {
+        const posicion = molecularAPantalla(
+            atomo.x,
+            atomo.y
+        );
+
+        const esfera = crearEsfera(
+            atomo.elemento,
+            elementos[atomo.elemento],
+            atomo.id
+        );
+
+        esfera.style.left = `${posicion.x}px`;
+        esfera.style.top = `${posicion.y}px`;
+
+        atomo.esfera = esfera;
+
+        capaAtomos3D.appendChild(esfera);
+    }
+}
+
+function actualizarVista3D() {
+    if (!capaAtomos3D || !dibujoEnlaces3D) return;
+
+    dibujarEnlaces3D();
+    dibujarAtomos3D();
+}
+    
