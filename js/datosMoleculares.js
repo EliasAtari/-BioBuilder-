@@ -43,5 +43,4 @@ const elementos = {
 const atomos = [];
 const enlaces = [];
 
-let siguengeId = 0;
-let elementosSeleccionado = "H";
+let siguenteId = 0;
