@@ -1,8 +1,10 @@
 
 "use strict";
 
+let primerAtomo = null;
+
 function valenciaUsada(atomo) {
-        let total = 0;
+    let total = 0;
 
     for (const enlace of enlaces) {
         if (
@@ -16,114 +18,106 @@ function valenciaUsada(atomo) {
     return total;
 }
 
+function iniciarCreacionEnlace() {
+    primerAtomo = null;
+
+    mostrarEstado(
+        "Selecciona el primer átomo para crear un enlace."
+    );
+}
+
 function seleccionarAtomoParaEnlace(x, y) {
     const atomo = buscarAtomoCercano(x, y);
 
     if (!atomo) {
-        if (estado) {
-            estado.textContent =
-                "Haz clic cerca de una esfera.";
-        }
+        mostrarEstado("Selecciona un átomo válido.");
         return;
     }
 
     if (!primerAtomo) {
         primerAtomo = atomo;
 
-        if (estado) {
-            estado.textContent =
-                "Primer átomo seleccionado. Ahora elige el segundo.";
-        }
+        mostrarEstado(
+            `Primer átomo: ${atomo.elemento}. Selecciona el segundo.`
+        );
 
         return;
     }
 
     if (primerAtomo.id === atomo.id) {
-        if (estado) {
-            estado.textContent =
-                "Selecciona un átomo diferente.";
-        }
+        mostrarEstado("Debes seleccionar un átomo diferente.");
         return;
     }
 
-    const a = primerAtomo;
-    const b = atomo;
+    crearOActualizarEnlace(primerAtomo, atomo);
+}
 
+function crearOActualizarEnlace(a, b) {
     const existente = enlaces.find(enlace =>
-        (enlace.a.id === a.id && enlace.b.id === b.id) ||
-        (enlace.a.id === b.id && enlace.b.id === a.id)
+        (
+            enlace.a.id === a.id &&
+            enlace.b.id === b.id
+        ) ||
+        (
+            enlace.a.id === b.id &&
+            enlace.b.id === a.id
+        )
     );
 
-    const ordenActual = existente ? existente.orden : 0;
-    const nuevoOrden = ordenActual + 1;
+    const ordenActual = existente
+        ? existente.orden
+        : 0;
 
-    if (nuevoOrden > 3) {
-        if (estado) {
-            estado.textContent =
-                "El enlace triple ya es el máximo permitido.";
-        }
-
+    if (ordenActual >= configuracionMolecular.enlaceMaximo) {
         primerAtomo = null;
+        mostrarEstado("El enlace triple ya es el máximo permitido.");
         return;
     }
 
     const datosA = elementos[a.elemento];
     const datosB = elementos[b.elemento];
 
-    const usadaA = valenciaUsada(a);
-    const usadaB = valenciaUsada(b);
-    const incremento = existente ? 1 : 1;
+    const valenciaA = valenciaUsada(a);
+    const valenciaB = valenciaUsada(b);
 
-if (
-    usadaA + incremento > datosA.valenciaMaxima ||
-    usadaB + incremento > datosB.valenciaMaxima
-) {
-    
-        if (estado) {
-            estado.textContent =
-                "Enlace rechazado: uno de los átomos alcanzó su límite de valencia.";
-        }
-
+    if (
+        valenciaA + 1 > datosA.valenciaMaxima ||
+        valenciaB + 1 > datosB.valenciaMaxima
+    ) {
         primerAtomo = null;
+
+        mostrarEstado(
+            "Enlace rechazado: se superaría la valencia máxima de un átomo."
+        );
+
         return;
     }
+
+    const nuevoOrden = ordenActual + 1;
 
     if (existente) {
         existente.orden = nuevoOrden;
     } else {
         enlaces.push({
-            a,
-            b,
-            orden: 1
+            a: a,
+            b: b,
+            orden: nuevoOrden
         });
     }
 
     primerAtomo = null;
 
-    actualizarDibujoEnlaces();
-    actualizarInformacion();
+    actualizarVista3D();
     actualizarVista2D();
+    actualizarInterfaz();
 
-    if (estado) {
-        const nombres = {
-            1: "simple",
-            2: "doble",
-            3: "triple"
-        };
+    const nombres = {
+        1: "simple",
+        2: "doble",
+        3: "triple"
+    };
 
-        estado.textContent =
-            `Enlace ${nombres[nuevoOrden]} creado correctamente.`;
-    }
-}
-
-function iniciarCreacionEnlace() {
-    modoColocacion = false;
-    modoEliminacion = false;
-    modoEnlace = true;
-    primerAtomo = null;
-
-    if (estado) {
-        estado.textContent =
-            "Haz clic en el primer átomo y después en el segundo.";
-    }
+    mostrarEstado(
+        `Enlace ${nombres[nuevoOrden]} creado correctamente.`
+    );
 }
