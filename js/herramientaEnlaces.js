@@ -57,11 +57,13 @@ function seleccionarAtomoParaEnlace(x, y) {
 
     const usadaA = valenciaUsada(a);
     const usadaB = valenciaUsada(b);
+    const incremento = existente ? 1 : 1;
 
-    if (
-        usadaA + 1 > datosA.valenciaMaxima ||
-        usadaB + 1 > datosB.valenciaMaxima
-    ) {
+if (
+    usadaA + incremento > datosA.valenciaMaxima ||
+    usadaB + incremento > datosB.valenciaMaxima
+) {
+    
         if (estado) {
             estado.textContent =
                 "Enlace rechazado: uno de los átomos alcanzó su límite de valencia.";
