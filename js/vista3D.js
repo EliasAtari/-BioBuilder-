@@ -119,5 +119,6 @@ function actualizarDibujoEnlaces() {
             dibujoEnlaces.appendChild(linea);
         }
     }
+}
                                                        }
       
