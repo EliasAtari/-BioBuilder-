@@ -1,8 +1,6 @@
 
 "use strict";
 
-alert("HERRAMIENTA AGREGAR CARGADA");
-
 let elementoSeleccionado = "H";
 
 function agregarAtomo() {
