@@ -58,6 +58,7 @@ function crearEsfera(simbolo, datos, id) {
 
     return svg;
 }
+alert("crearEsfera se declaró correctamente");
 
 function actualizarDibujoEnlaces() {
     if (!dibujoEnlaces || !visor) return;
