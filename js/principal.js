@@ -138,6 +138,7 @@ window.addEventListener(
     actualizarDibujoEnlaces
 );
 
+alert(typeof crearEsfera);
 actualizarInformacion();
 actualizarDibujoEnlaces();
 alternarVista("3D");
