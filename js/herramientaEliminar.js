@@ -2,26 +2,26 @@
 "use strict";
 
 function iniciarEliminacion() {
-    modoColocacion = false;
-    modoEnlace = false;
-    modoEliminacion = true;
-    primerAtomo = null;
-
-    if (estado) {
-        estado.textContent =
-            "Haz clic cerca del átomo que quieres eliminar.";
-    }
+    mostrarEstado(
+        "Selecciona el átomo que deseas eliminar."
+    );
 }
 
 function buscarAtomoCercano(x, y) {
+    const posicion = pantallaAMolecular(x, y);
+
     let atomoCercano = null;
     let distanciaMinima = Infinity;
 
-    const radioSeleccion = plano2DActivo ? 14 : 24;
+    const radio = plano2DActivo
+        ? configuracionMolecular.radioAtomo2D
+        : configuracionMolecular.radioAtomo3D;
+
+    const radioSeleccion = radio + 8 / camara.zoom;
 
     for (const atomo of atomos) {
-        const dx = atomo.x - x;
-        const dy = atomo.y - y;
+        const dx = atomo.x - posicion.x;
+        const dy = atomo.y - posicion.y;
 
         const distancia = Math.hypot(dx, dy);
 
@@ -38,32 +38,32 @@ function buscarAtomoCercano(x, y) {
 }
 
 function eliminarAtomo(atomo) {
+    if (!atomo) return;
+    
     for (let i = enlaces.length - 1; i >= 0; i--) {
+        const enlace = enlaces[i];
+
         if (
-            enlaces[i].a.id === atomo.id ||
-            enlaces[i].b.id === atomo.id
+            enlace.a.id === atomo.id ||
+            enlace.b.id === atomo.id
         ) {
             enlaces.splice(i, 1);
         }
     }
 
-    atomo.esfera.remove();
-
-    const indice = atomos.findIndex(a => a.id === atomo.id);
+    const indice = atomos.findIndex(
+        elemento => elemento.id === atomo.id
+    );
 
     if (indice !== -1) {
         atomos.splice(indice, 1);
     }
 
-    actualizarDibujoEnlaces();
-    actualizarInformacion();
+    actualizarVista3D();
     actualizarVista2D();
+    actualizarInterfaz();
 
-    if (atomos.length === 0 && mensajeInicial) {
-        mensajeInicial.style.display = "";
-    }
-
-    if (estado) {
-        estado.textContent = "Átomo y sus enlaces eliminados.";
-    }
+    mostrarEstado(
+        `${elementos[atomo.elemento].nombre} eliminado correctamente.`
+    );
 }
