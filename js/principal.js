@@ -23,6 +23,9 @@ function alternarVista(vista) {
 
     activarPlano2D(mostrar2D);
 
+    botonVista2D.classList.toggle("activo", mostrar2D);
+botonVista3D.classList.toggle("activo", !mostrar2D);
+
     if (dibujoEnlaces) {
         dibujoEnlaces.style.display =
             mostrar2D ? "none" : "";
