@@ -44,3 +44,5 @@ const atomos = [];
 const enlaces = [];
 
 let siguinteId = 0;
+
+alert("DATOS MOLECULARES CARGADO");
