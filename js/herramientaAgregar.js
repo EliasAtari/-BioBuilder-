@@ -47,7 +47,7 @@ function colocarAtomo(x, y) {
 
     const id = siguienteId++;
 
-    crearEsfera(simbolo, datos, id);
+    const esfera3D = crearEsfera(simbolo, datos, id);
 
     esfera.style.left = `${x - 24}px`;
     esfera.style.top = `${y - 24}px`;
