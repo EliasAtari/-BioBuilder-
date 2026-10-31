@@ -43,4 +43,4 @@ const elementos = {
 const atomos = [];
 const enlaces = [];
 
-let siguenteId = 0;
+let siguinteId = 0;
