@@ -3,77 +3,51 @@
 
 let elementoSeleccionado = "H";
 
-function agregarAtomo() {
-  if (!visor) return;
-
-    const opciones = Object.entries(elementos)
-        .map(([simbolo, datos]) =>
-            `${simbolo} = ${datos.nombre}`
-        )
-        .join("\n");
-
-    const respuesta = prompt(
-        "¿Qué átomo quieres colocar?\n\n" +
-        opciones +
-        "\n\nEscribe el símbolo:"
-    );
-
-    if (respuesta === null) return;
-
-    const simbolo = respuesta.trim().toUpperCase();
-
+function seleccionarElemento(simbolo) {
     if (!elementos[simbolo]) {
-        if (estado) estado.textContent = "Elemento no válido.";
+        mostrarEstado("Elemento químico no válido.");
         return;
     }
 
     elementoSeleccionado = simbolo;
 
-    modoColocacion = true;
-    modoEnlace = false;
-    modoEliminacion = false;
-    primerAtomo = null;
+    mostrarEstado(
+        `Elemento seleccionado: ${elementos[simbolo].nombre}`
+    );
+}
 
-    if (estado) {
-        estado.textContent =
-            `Seleccionaste ${elementos[simbolo].nombre}. ` +
-            "Haz clic en el espacio molecular.";
-    }
+function iniciarAgregarAtomo() {
+    mostrarEstado(
+        `Selecciona dónde colocar el átomo ${elementoSeleccionado}.`
+    );
 }
 
 function colocarAtomo(x, y) {
-    const simbolo = elementoSeleccionado;
-    const datos = elementos[simbolo];
+    if (!elementos[elementoSeleccionado]) {
+        mostrarEstado("No se reconoce el elemento seleccionado.");
+        return;
+    }
+
+    const posicion = pantallaAMolecular(x, y);
 
     const id = siguienteId++;
 
-    const esfera = crearEsfera(simbolo, datos, id);
+    const atomo = {
+        id: id,
+        elemento: elementoSeleccionado,
+        x: posicion.x,
+        y: posicion.y,
+        esfera: null
+    };
 
-    esfera.style.left = `${x - 24}px`;
-    esfera.style.top = `${y - 24}px`;
+    atomos.push(atomo);
 
-    esfera.style.display = plano2DActivo ? "none" : "";
-
-    if (mensajeInicial) {
-        mensajeInicial.style.display = "none";
-    }
-
-    visor.appendChild(esfera);
-
-    atomos.push({
-        id,
-        elemento: simbolo,
-        esfera,
-        x,
-        y
-    });
-
-    actualizarDibujoEnlaces();
+    // Actualizar las representaciones
+    actualizarVista3D();
     actualizarVista2D();
-    actualizarInformacion();
+    actualizarInterfaz();
 
-    if (estado) {
-        estado.textContent =
-            `Átomo añadido: ${datos.nombre}`;
-    }
+    mostrarEstado(
+        `${elementos[elementoSeleccionado].nombre} agregado correctamente.`
+    );
 }
