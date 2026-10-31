@@ -9,6 +9,11 @@ window.onerror = (mensaje, archivo, linea, columna) => {
     );
 };
 
+alert(
+    "crearEsfera: " + typeof window.crearEsfera +
+    "\nactualizarDibujoEnlaces: " + typeof window.actualizarDibujoEnlaces
+);
+
 const botonAgregar = document.getElementById("agregar-atomo");
 const botonEliminar = document.getElementById("eliminar");
 const botonEnlace = document.getElementById("crear-enlace");
