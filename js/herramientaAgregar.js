@@ -44,12 +44,15 @@ function agregarAtomo() {
 function colocarAtomo(x, y) {
     const simbolo = elementoSeleccionado;
     const datos = elementos[simbolo];
+
     const id = siguienteId++;
 
     const esfera = crearEsfera(simbolo, datos, id);
 
     esfera.style.left = `${x - 24}px`;
     esfera.style.top = `${y - 24}px`;
+
+    esfera.style.display = plano2DActivo ? "none" : "";
 
     if (mensajeInicial) {
         mensajeInicial.style.display = "none";
@@ -65,10 +68,12 @@ function colocarAtomo(x, y) {
         y
     });
 
-    actualizarInformacion();
+    actualizarDibujoEnlaces();
     actualizarVista2D();
+    actualizarInformacion();
 
     if (estado) {
-        estado.textContent = `Átomo añadido: ${datos.nombre}`;
+        estado.textContent =
+            `Átomo añadido: ${datos.nombre}`;
     }
 }
