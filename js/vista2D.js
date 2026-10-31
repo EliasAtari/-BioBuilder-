@@ -88,9 +88,7 @@ function dibujarEnlaces2D() {
             linea.setAttribute("stroke-width", "3");
             linea.setAttribute("stroke-linecap", "round");
 
-            dibujoPlano2D.insertBefore(
-              grupoPlano2D.appendChild(linea)
-            );
+          grupoPlano2D.appendChild(linea)
         }
     }
 }
