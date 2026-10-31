@@ -1,6 +1,21 @@
 
 "use strict";
 
+function valenciaUsada(atomo) {
+        let total = 0;
+
+    for (const enlace of enlaces) {
+        if (
+            enlace.a.id === atomo.id ||
+            enlace.b.id === atomo.id
+        ) {
+            total += enlace.orden;
+        }
+    }
+
+    return total;
+}
+
 function seleccionarAtomoParaEnlace(x, y) {
     const atomo = buscarAtomoCercano(x, y);
 
