@@ -13,6 +13,30 @@ function iniciarEliminacion() {
     }
 }
 
+function buscarAtomoCercano(x, y) {
+    let atomoCercano = null;
+    let distanciaMinima = Infinity;
+
+    const radioSeleccion = plano2DActivo ? 14 : 24;
+
+    for (const atomo of atomos) {
+        const dx = atomo.x - x;
+        const dy = atomo.y - y;
+
+        const distancia = Math.hypot(dx, dy);
+
+        if (
+            distancia <= radioSeleccion &&
+            distancia < distanciaMinima
+        ) {
+            distanciaMinima = distancia;
+            atomoCercano = atomo;
+        }
+    }
+
+    return atomoCercano;
+}
+
 function eliminarAtomo(atomo) {
     for (let i = enlaces.length - 1; i >= 0; i--) {
         if (
