@@ -1,15 +1,22 @@
 
 "use strict";
 
-const CACHE_NAME = "BioBuilder-v1";
+const CACHE_NAME = "biobuilder-v2";
+
 const ARCHIVOS = [
-  "./",
-  "./index.html",
-  "./manifest.json",
-  "./css/estilos.css",
-  "./js/principal.js",
-  "./js/plano2D.js"
-  ];
+    "./",
+    "./index.html",
+    "./manifest.json",
+    "./css/estilos.css",
+    "./js/datosMoleculares.js",
+    "./js/interfaz.js",
+    "./js/herramientaAgregar.js",
+    "./js/herramientaEliminar.js",
+    "./js/herramientaEnlaces.js",
+    "./js/vista2D.js",
+    "./js/vista3D.js",
+    "./js/principal.js"
+];
 
 self.addEventListener("install", (evento) => {
     evento.waitUntil(
@@ -20,8 +27,8 @@ self.addEventListener("install", (evento) => {
 });
 
 self.addEventListener("activate", (evento) => {
-  evento.waitUntil(
-            caches.keys()
+    evento.waitUntil(
+        caches.keys()
             .then((nombres) => {
                 return Promise.all(
                     nombres
@@ -37,26 +44,24 @@ self.addEventListener("activate", (evento) => {
 });
 
 self.addEventListener("fetch", (evento) => {
-  const solicitud= evento.requets;
+    const solicitud = evento.request;
 
-                      if (
-                        solicitud.method !== "GET" ||
-                        new URL(solicitud.url).origin = self.location.origin)
-                      {
-                        return;
-                      }
+    if (
+        solicitud.method !== "GET" ||
+        new URL(solicitud.url).origin !== self.location.origin
+    ) {
+        return;
+    }
 
-                      evento.respondWhith(
-                        caches.math(solicitud)
-                        .then((respuesta) => {
-                          if (respuesta) {
-                            return respuesta;
-                          }
-                                          return fetch(solicitud).then((respuestaRed) => {
-                    if (
-                        respuestaRed &&
-                        respuestaRed.ok
-                    ) {
+    evento.respondWith(
+        caches.match(solicitud)
+            .then((respuesta) => {
+                if (respuesta) {
+                    return respuesta;
+                }
+
+                return fetch(solicitud).then((respuestaRed) => {
+                    if (respuestaRed && respuestaRed.ok) {
                         const copia = respuestaRed.clone();
 
                         caches.open(CACHE_NAME)
